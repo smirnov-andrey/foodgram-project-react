@@ -32,7 +32,6 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     name = models.CharField(
         verbose_name='Наименование',
-        unique=True,
         blank=False,
         max_length=200)
     measurement_unit = models.CharField(
@@ -44,6 +43,12 @@ class Ingredient(models.Model):
         ordering = ('name',)
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_relationships',
+                fields=['name', 'measurement_unit'],
+            ),
+        ]
 
     def __str__(self):
         return f'{self.name} ({self.measurement_unit})'
@@ -60,7 +65,7 @@ class Recipe(models.Model):
         max_length=200,
         verbose_name='Название')
     image = models.ImageField(
-        upload_to='recipe_images/',
+        upload_to='recipes/images/',
         blank=False,
         verbose_name='Ссылка на картинку на сайте')
     text = models.TextField(
@@ -74,13 +79,16 @@ class Recipe(models.Model):
         through='IngredientInRecipe',
         related_name='ingredient_recipes',
         verbose_name='Список ингредиентов')
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         Tag,
         related_name='tag_recipes',
         verbose_name='Список тегов')
+    create_date = models.DateTimeField(
+        verbose_name='Дата добавления',
+        auto_now_add=True)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-create_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -93,6 +101,7 @@ class IngredientInRecipe(models.Model):
         Ingredient,
         on_delete=models.PROTECT,
         null=False,
+        related_name='ingredient_in_recipes',
         verbose_name='Ингридиент')
     amount = models.PositiveSmallIntegerField(
         blank=False,
@@ -102,6 +111,11 @@ class IngredientInRecipe(models.Model):
         on_delete=models.CASCADE,
         null=False,
         verbose_name='Рецепт')
+
+    class Meta:
+        ordering = ('ingredient',)
+        verbose_name = 'Ингридиент в рецепте'
+        verbose_name_plural = 'Ингридиенты в рецепте'
 
     def __str__(self):
         return f'{self.ingredient} в количестве {self.amount}'
@@ -151,6 +165,7 @@ class ShoppingCarts(models.Model):
 
     class Meta:
         ordering = ('recipe',)
+        default_related_name = 'shopping_cart'
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
 
