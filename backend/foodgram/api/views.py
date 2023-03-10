@@ -1,24 +1,19 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from django.http import HttpResponse
 from django.db.models import Sum
+from django.http import HttpResponse
+
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 
 from .filters import IngredientFilter
 from .mixins import AddRemoveListMixin
-from .serializers import (IngredientSerializer,
-                          RecipeSerializer,
-                          RecipeCreateUpdateSerializer,
-                          SubscriptionListSerializer,
-                          TagSerializer)
 from .permissions import AllowAuthorOrReadOnly
-from recipes.models import (FavoriteRecipes,
-                            Ingredient,
-                            Recipe,
-                            ShoppingCarts,
-                            Tag,
-                            User)
+from .serializers import (IngredientSerializer, RecipeCreateUpdateSerializer,
+                          RecipeSerializer, SubscriptionListSerializer,
+                          TagSerializer)
+from recipes.models import (FavoriteRecipes, Ingredient, Recipe, ShoppingCarts,
+                            Tag, User)
 from users.models import Subscription
 
 
@@ -116,8 +111,8 @@ class RecipeViewSet(viewsets.ModelViewSet, AddRemoveListMixin):
                 f'''{data['name']} - {data['amount']} '''
                 f'''{data['measurement_unit']}\n'''
             )
-        response['Content-Disposition'] = (f'attachment; '
-                                           f'filename=shopping-list.txt')
+        response['Content-Disposition'] = ('attachment; '
+                                           'filename="shopping-list.txt"')
         return response
 
 
@@ -153,4 +148,3 @@ class SubscriptionActionViewSet(viewsets.ViewSet, AddRemoveListMixin):
             field_name='author',
             target_model=Subscription,
         )
-

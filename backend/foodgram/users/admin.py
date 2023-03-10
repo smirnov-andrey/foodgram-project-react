@@ -15,6 +15,6 @@ class SubscriptionAdmin(admin.ModelAdmin):
     actions_selection_counter = True
     show_full_result_count = True
 
+
 admin.site.register(Subscription, SubscriptionAdmin)
 admin.site.register(User, UserAdmin)
-

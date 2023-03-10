@@ -1,13 +1,11 @@
 import base64
+
 from django.core.files.base import ContentFile
 from django.db import transaction
+
 from rest_framework import serializers
 
-from recipes.models import (Ingredient,
-                            IngredientInRecipe,
-                            Recipe,
-                            Tag,
-                            User)
+from recipes.models import Ingredient, IngredientInRecipe, Recipe, Tag, User
 from users.serializers import UserSerializer
 
 
@@ -189,7 +187,6 @@ class SubscriptionListSerializer(UserSerializer):
             'recipes',
             'recipes_count'
         )
-
 
     def get_recipes(self, obj):
         request = self.context.get('request')

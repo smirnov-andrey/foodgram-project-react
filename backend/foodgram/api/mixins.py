@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -30,16 +31,16 @@ class AddRemoveListMixin:
                     in_list_err_msg,
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            else:
+
                 target_model.objects.create(**target_kwargs)
                 serializer = self.get_serializer_class()
-                return Response(
-                    serializer(
-                        qs_object,
-                        context={'request': self.request}
-                    ).data,
-                    status=status.HTTP_201_CREATED
-                )
+            return Response(
+                serializer(
+                    qs_object,
+                    context={'request': self.request}
+                ).data,
+                status=status.HTTP_201_CREATED
+            )
         if self.request.method == 'DELETE':
             if target_list.exists():
                 target_list.delete()
@@ -47,8 +48,8 @@ class AddRemoveListMixin:
                     deleted_msg,
                     status=status.HTTP_204_NO_CONTENT
                 )
-            else:
-                return Response(
-                    not_in_list_err_msg,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+            return Response(
+                not_in_list_err_msg,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return None
