@@ -1,12 +1,11 @@
 import base64
 from django.core.files.base import ContentFile
+from django.db import transaction
 from rest_framework import serializers
 
-from recipes.models import (FavoriteRecipes,
-                            Ingredient,
+from recipes.models import (Ingredient,
                             IngredientInRecipe,
                             Recipe,
-                            ShoppingCarts,
                             Tag,
                             User)
 from users.serializers import UserSerializer
@@ -31,8 +30,10 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class IngredientInRecipeSerializer(serializers.ModelSerializer):
     """Сериализатор для отображения ингредиентов в рецепте."""
-    id = serializers.ReadOnlyField(
-        source='ingredient.id',
+    id = serializers.PrimaryKeyRelatedField(
+        source='ingredient',
+        queryset=Ingredient.objects.all()
+
     )
     name = serializers.ReadOnlyField(
         source='ingredient.name',
@@ -61,8 +62,8 @@ class TagSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     """Сериализатор для рецептов."""
-    is_favorited = serializers.SerializerMethodField()
-    is_in_shopping_cart = serializers.SerializerMethodField()
+    is_favorited = serializers.BooleanField()
+    is_in_shopping_cart = serializers.BooleanField()
     ingredients = serializers.SerializerMethodField()
     tags = TagSerializer(many=True)
     author = UserSerializer()
@@ -81,28 +82,11 @@ class RecipeSerializer(serializers.ModelSerializer):
                   'cooking_time'
                   )
 
-    @staticmethod
-    def get_ingredients(obj):
-        ingredients = IngredientInRecipe.objects.filter(recipe=obj)
-        return IngredientInRecipeSerializer(ingredients, many=True).data
-
-    def get_is_favorited(self, obj):
-        request = self.context.get('request')
-        if request is None or request.user.is_anonymous:
-            return False
-        return FavoriteRecipes.objects.filter(
-            user=request.user,
-            recipe=obj
-        ).exists()
-
-    def get_is_in_shopping_cart(self, obj):
-        request = self.context.get('request')
-        if request is None or request.user.is_anonymous:
-            return False
-        return ShoppingCarts.objects.filter(
-            user=request.user,
-            recipe=obj
-        ).exists()
+    def get_ingredients(self, obj):
+        return IngredientInRecipeSerializer(
+            IngredientInRecipe.objects.filter(recipe=obj).all(),
+            many=True
+        ).data
 
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
@@ -140,6 +124,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 'Ингредиенты не должны повторяться')
         return data
 
+    @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')

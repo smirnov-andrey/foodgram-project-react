@@ -54,6 +54,29 @@ class Ingredient(models.Model):
         return f'{self.name} ({self.measurement_unit})'
 
 
+class RecipeQuerySet(models.QuerySet):
+    def filtered_by_tags(self, tags):
+        if tags:
+            return self.filter(tags__slug__in=tags).distinct()
+        return self
+
+    def add_user_annotations(self, user_id):
+        return self.annotate(
+            is_favorited=models.Exists(
+                FavoriteRecipes.objects.filter(
+                    user_id=user_id,
+                    recipe__pk=models.OuterRef('pk')
+                )
+            ),
+            is_in_shopping_cart=models.Exists(
+                ShoppingCarts.objects.filter(
+                    user_id=user_id,
+                    recipe__pk=models.OuterRef('pk')
+                )
+            )
+        )
+
+
 class Recipe(models.Model):
     author = models.ForeignKey(
         User,
@@ -86,6 +109,8 @@ class Recipe(models.Model):
     create_date = models.DateTimeField(
         verbose_name='Дата добавления',
         auto_now_add=True)
+
+    objects = RecipeQuerySet.as_manager()
 
     class Meta:
         ordering = ('-create_date',)

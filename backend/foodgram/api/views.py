@@ -46,9 +46,6 @@ class TagViewSet(mixins.ListModelMixin,
 
 class RecipeViewSet(viewsets.ModelViewSet, AddRemoveListMixin):
     """Обрабатывает запоросы по работе с рецептами GET, POST, PATCH, DELETE."""
-    queryset = Recipe.objects.all()
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RecipeFilter
     http_method_names = ('get', 'post', 'patch', 'delete')
     permission_classes = (AllowAuthorOrReadOnly,)
 
@@ -56,6 +53,22 @@ class RecipeViewSet(viewsets.ModelViewSet, AddRemoveListMixin):
         if self.request.method in SAFE_METHODS:
             return RecipeSerializer
         return RecipeCreateUpdateSerializer
+
+    def get_queryset(self):
+        tags = self.request.query_params.getlist('tags')
+        user = self.request.user
+        queryset = Recipe.objects
+        if tags:
+            queryset = queryset.filtered_by_tags(tags)
+        queryset = queryset.add_user_annotations(user.pk)
+        if self.request.query_params.get('is_favorited'):
+            queryset = queryset.filter(is_favorited=True)
+        if self.request.query_params.get('is_in_shopping_cart'):
+            queryset = queryset.filter(is_in_shopping_cart=True)
+        author = self.request.query_params.get('author', None)
+        if author:
+            queryset = queryset.filter(author=author)
+        return queryset
 
     @action(
         methods=['POST', 'DELETE'],
