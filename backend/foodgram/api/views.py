@@ -5,7 +5,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, SAFE_METHODS
 
-from .filters import IngredientFilter, RecipeFilter
+from .filters import IngredientFilter
 from .mixins import AddRemoveListMixin
 from .serializers import (IngredientSerializer,
                           RecipeSerializer,
