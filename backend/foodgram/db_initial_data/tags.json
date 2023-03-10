@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Завтрак",
+    "color": "#FFA500",
+    "slug": "breakfast"
+  },
+  {
+    "name": "Обед",
+    "color": "#00FF00",
+    "slug": "lunch"
+  },
+  {
+    "name": "Ужин",
+    "color": "#DB7093",
+    "slug": "dinner"
+  },
+  {
+    "name": "Пикник",
+    "color": "#808000",
+    "slug": "picnic"
+  },
+  {
+    "name": "Вечеринка",
+    "color": "#C0C0C0",
+    "slug": "party"
+  },
+  {
+    "name": "Десерт",
+    "color": "#D2691E",
+    "slug": "dessert"
+  }
+]
