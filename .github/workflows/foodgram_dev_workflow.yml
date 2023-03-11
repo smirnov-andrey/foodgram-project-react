@@ -80,7 +80,8 @@ jobs:
           remote: scp/single/nginx.conf
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
       - name: copy docker compose yaml
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -88,7 +89,8 @@ jobs:
           remote: scp/single/docker-compose.prod.yml
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
