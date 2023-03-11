@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTags } from './index.js'
-import api from '../api'
+import api from '../api/index_old'
 
 export default function useRecipes () {
   const [ recipes, setRecipes ] = useState([])

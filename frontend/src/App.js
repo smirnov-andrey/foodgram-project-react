@@ -3,7 +3,7 @@ import './App.css';
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import { Header, Footer, ProtectedRoute } from './components'
-import api from './api'
+import api from './api/index_old'
 import styles from './styles.module.css'
 import cn from 'classnames'
 import hamburgerImg from './images/hamburger-menu.png'
