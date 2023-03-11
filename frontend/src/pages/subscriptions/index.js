@@ -1,6 +1,6 @@
 import { Title, Pagination, Container, Main, SubscriptionList  } from '../../components'
 import { useSubscriptions } from '../../utils'
-import api from '../../api'
+import api from '../../api/index_local'
 import { useEffect } from 'react'
 import MetaTags from 'react-meta-tags'
 
