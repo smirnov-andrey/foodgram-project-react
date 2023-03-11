@@ -1,10 +1,9 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
 from dotenv import load_dotenv
-
-# import sentry_sdk
-# from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
 
 load_dotenv()
 
@@ -14,10 +13,25 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 DEBUG = str(os.getenv('DEBUG')) == 'True'
 
-ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split(',')
+ALLOWED_HOSTS = [
+    '*',
+    '62.84.118.205',
+    'foodgram.redirectme.net',
+    'localhost',
+    '127.0.0.1',
+    '[::1]'
+]
+# ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split(',')
 
-CORS_ORIGIN_ALLOW_ALL = str(os.getenv('CORS_ORIGIN_ALLOW_ALL')) == 'True'
-CORS_ALLOWED_ORIGINS = str(os.getenv('CORS_ALLOWED_ORIGINS')).split(',')
+CORS_ORIGIN_ALLOW_ALL = True
+# dotenv не проходит тест Github Actions
+# CORS_ORIGIN_ALLOW_ALL = str(os.getenv('CORS_ORIGIN_ALLOW_ALL')) == 'True'
+CORS_ALLOWED_ORIGINS = [
+    'http://foodgram.redirectme.net',
+    'http://62.84.118.205'
+]
+# dotenv не проходит тест Github Actions
+# str(os.getenv('CORS_ALLOWED_ORIGINS')).split(',')
 CORS_URLS_REGEX = r'^/api/.*$'
 
 INSTALLED_APPS = [
@@ -75,7 +89,10 @@ DATABASES = {
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        'PORT': os.getenv('DB_PORT'),
+        'TEST': {
+            'NAME': 'mytestdatabase',
+        },
     }
 }
 
@@ -132,19 +149,14 @@ DJOSER = {
         'user': 'users.serializers.UserSerializer',
         'current_user': 'users.serializers.UserSerializer',
     },
-    'PERMISSIONS': {
-        'user': ['rest_framework.permissions.IsAuthenticated'],
-        'user_list': ['rest_framework.permissions.AllowAny'],
-    },
-    'HIDE_USERS': False
 }
 
 # Sentry's monitoring
-# sentry_sdk.init(
-#     dsn="https://31a19bdf83364f30beeab76cf9e4e3ba@o4504544276840448.ingest.sentry.io/4504817612554240",
-#     integrations=[
-#         DjangoIntegration(),
-#     ],
-#     traces_sample_rate=1.0,
-#     send_default_pii=True
-# )
+sentry_sdk.init(
+    dsn="https://31a19bdf83364f30beeab76cf9e4e3ba@o4504544276840448.ingest.sentry.io/4504817612554240",
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
