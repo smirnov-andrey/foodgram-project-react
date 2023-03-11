@@ -16,8 +16,15 @@ DEBUG = str(os.getenv('DEBUG')) == 'True'
 
 ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split(',')
 
-CORS_ORIGIN_ALLOW_ALL = str(os.getenv('CORS_ORIGIN_ALLOW_ALL')) == 'True'
-CORS_ALLOWED_ORIGINS = str(os.getenv('CORS_ALLOWED_ORIGINS')).split(',')
+CORS_ORIGIN_ALLOW_ALL = False
+# dotenv не проходит тест Github Actions
+# str(os.getenv('CORS_ORIGIN_ALLOW_ALL')) == 'True'
+CORS_ALLOWED_ORIGINS = [
+    'http://foodgram.redirectme.net',
+    'http://62.84.118.205'
+]
+# dotenv не проходит тест Github Actions
+# str(os.getenv('CORS_ALLOWED_ORIGINS')).split(',')
 CORS_URLS_REGEX = r'^/api/.*$'
 
 INSTALLED_APPS = [
