@@ -31,9 +31,8 @@ class AddRemoveListMixin:
                     in_list_err_msg,
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
-                target_model.objects.create(**target_kwargs)
-                serializer = self.get_serializer_class()
+            target_model.objects.create(**target_kwargs)
+            serializer = self.get_serializer_class()
             return Response(
                 serializer(
                     qs_object,

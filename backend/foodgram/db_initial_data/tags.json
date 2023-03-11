@@ -6,7 +6,7 @@
   },
   {
     "name": "Обед",
-    "color": "#00FF00",
+    "color": "#00BFFF",
     "slug": "lunch"
   },
   {
@@ -23,10 +23,5 @@
     "name": "Вечеринка",
     "color": "#C0C0C0",
     "slug": "party"
-  },
-  {
-    "name": "Десерт",
-    "color": "#D2691E",
-    "slug": "dessert"
   }
 ]

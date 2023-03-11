@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
 from dotenv import load_dotenv
+from sentry_sdk.integrations.django import DjangoIntegration
 
 load_dotenv()
 
@@ -13,10 +15,8 @@ DEBUG = str(os.getenv('DEBUG')) == 'True'
 
 ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split(',')
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost',
-]
+CORS_ORIGIN_ALLOW_ALL = str(os.getenv('CORS_ORIGIN_ALLOW_ALL')) == 'True'
+CORS_ALLOWED_ORIGINS = str(os.getenv('CORS_ALLOWED_ORIGINS')).split(',')
 CORS_URLS_REGEX = r'^/api/.*$'
 
 INSTALLED_APPS = [
@@ -69,10 +69,10 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT')
     }
@@ -105,8 +105,9 @@ AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/'),
+    # os.path.join(BASE_DIR, 'static/'),
 )
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -136,3 +137,13 @@ DJOSER = {
     },
     'HIDE_USERS': False
 }
+
+# Sentry's monitoring
+sentry_sdk.init(
+    dsn=str(os.getenv('SENTRY_DNS')),
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
