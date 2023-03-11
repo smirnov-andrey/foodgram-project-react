@@ -139,11 +139,11 @@ DJOSER = {
 }
 
 # Sentry's monitoring
-sentry_sdk.init(
-    dsn="https://31a19bdf83364f30beeab76cf9e4e3ba@o4504544276840448.ingest.sentry.io/4504817612554240",
-    integrations=[
-        DjangoIntegration(),
-    ],
-    traces_sample_rate=1.0,
-    send_default_pii=True
-)
+# sentry_sdk.init(
+#     dsn="https://31a19bdf83364f30beeab76cf9e4e3ba@o4504544276840448.ingest.sentry.io/4504817612554240",
+#     integrations=[
+#         DjangoIntegration(),
+#     ],
+#     traces_sample_rate=1.0,
+#     send_default_pii=True
+# )
