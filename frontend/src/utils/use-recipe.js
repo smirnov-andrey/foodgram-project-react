@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import api from '../api/index_old'
+import api from '../api'
 
 export default function useRecipe () {
   const [ recipe, setRecipe ] = useState({})

@@ -9,7 +9,7 @@ import { useRouteMatch, useParams, useHistory } from 'react-router-dom'
 import MetaTags from 'react-meta-tags'
 
 import { useRecipe } from '../../utils/index.js'
-import api from '../../api/index_old'
+import api from '../../api'
 
 const SingleCard = ({ loadItem, updateOrders }) => {
   const [ loading, setLoading ] = useState(true)

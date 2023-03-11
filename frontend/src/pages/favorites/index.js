@@ -2,7 +2,7 @@ import { Card, Title, Pagination, CardList, Container, Main, CheckboxGroup  } fr
 import styles from './styles.module.css'
 import { useRecipes } from '../../utils/index.js'
 import { useEffect } from 'react'
-import api from '../../api/index_old'
+import api from '../../api'
 import MetaTags from 'react-meta-tags'
 
 const Favorites = ({ updateOrders }) => {
