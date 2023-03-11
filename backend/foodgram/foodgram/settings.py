@@ -14,9 +14,10 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 DEBUG = str(os.getenv('DEBUG')) == 'True'
 
-ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOSTS')).split(',')
+ALLOWED_HOSTS = ['*']
+# str(os.getenv('ALLOWED_HOSTS')).split(',')
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 # dotenv не проходит тест Github Actions
 # str(os.getenv('CORS_ORIGIN_ALLOW_ALL')) == 'True'
 CORS_ALLOWED_ORIGINS = [

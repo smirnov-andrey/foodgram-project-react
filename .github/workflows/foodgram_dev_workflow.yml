@@ -98,8 +98,6 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SENTRY_DNS=${{ secrets.SENTRY_DNS }} >> .env
             sudo docker-compose -p foodgram up -d
-            sudo docker-compose exec -T backend python manage.py migrate 
-            sudo docker-compose exec -T backend python manage.py collectstatic --no-input
 
   send_message:
     runs-on: ubuntu-latest
