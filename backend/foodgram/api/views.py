@@ -41,7 +41,7 @@ class TagViewSet(mixins.ListModelMixin,
 
 class RecipeViewSet(viewsets.ModelViewSet, AddRemoveListMixin):
     """Обрабатывает запоросы по работе с рецептами GET, POST, PATCH, DELETE."""
-    http_method_names = ('get', 'post', 'patch', 'delete', 'head', 'options')
+    http_method_names = ('get', 'post', 'patch', 'delete')
     permission_classes = (AllowAuthorOrReadOnly,)
 
     def get_serializer_class(self):
