@@ -1,6 +1,6 @@
 name: foodgram_master_workflow
 
-on: workflow_dispatch
+on: push
 
 jobs:
   backend_tests:
@@ -30,7 +30,7 @@ jobs:
   backend_build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    needs: tests
+    needs: backend_tests
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - name: Check out the repo
@@ -52,7 +52,7 @@ jobs:
   frontend_build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    needs: tests
+    needs: backend_tests
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - name: Check out the repo
@@ -73,7 +73,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [build_and_push_to_docker_hub, frontend_build_and_push_to_docker_hub]
+    needs: [backend_build_and_push_to_docker_hub, frontend_build_and_push_to_docker_hub]
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - name: executing remote ssh commands to deploy
