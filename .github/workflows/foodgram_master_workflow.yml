@@ -1,6 +1,6 @@
 name: foodgram_master_workflow
 
-on: workflow_dispatch
+on: push
 
 jobs:
   backend_tests:
